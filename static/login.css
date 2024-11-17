@@ -1,0 +1,64 @@
+/* Main container (no background color) */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(240, 240, 240); 
+  align-items: center;
+}
+
+/* Login Form Styling */
+.login-form {
+  max-width: 450px; /* Reduced width to 450px for a slightly thinner form */
+  width: 100%;
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.9); /* Light background with transparency */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-form h2 {
+  color: #6A4C9C; /* Primary Purple for headings */
+}
+
+.login-form .form-label {
+  color: #3E2A5B; /* Dark Purple for labels */
+}
+
+.login-form .form-control {
+  border-radius: 4px;
+  border: 1px solid #6A4C9C; /* Purple borders for input fields */
+}
+
+.btn-primary {
+  background-color: #6A4C9C; /* Primary Purple for the button */
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #9B7ACD; /* Lighter purple on hover */
+}
+
+.btn-primary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(155, 122, 205, 0.5); /* Light Purple glow effect */
+}
+
+.text-center a {
+  color: #FF5D8F; /* Bright Pink for links */
+}
+
+/* Image Side Styling */
+.image-side {
+  background-image: url('images/login_side.jpg');
+  background-size: cover;
+  background-position: center;
+  display: block;
+  height: 100vh;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .login-form {
+      max-width: 90%; /* Ensure the form is not too wide on smaller screens */
+  }
+}

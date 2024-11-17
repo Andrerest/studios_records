@@ -1,61 +1,46 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout
 from django.http import HttpResponse
 
-def home(request):
-    return render(request, 'pages/index.html')
-
-def profile(request):
-    return render(request, 'pages/profile.html')
-
-def notification(request):
-    return render(request, 'pages/notification.html')
+def home_view(request):
+    return render(request, 'album.html')
 
 
-def login(request):
+def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
+        
         if form.is_valid():
+            # The user is authenticated
             user = form.get_user()
             login(request, user)
-            return redirect('home/')  
+            messages.success(request, 'Iniciaste sesión correctamente!')
+            return redirect('home')  # Redirect to home after successful login
+        else:
+            # Form is invalid, display errors
+            messages.error(request, 'Credenciales incorrectas. Por favor intenta de nuevo.')
+
     else:
         form = AuthenticationForm()
 
-    return render(request, 'test.html', {'form': form})
+    return render(request, 'login.html', {'form': form})  
 
 
-##
-
-
-def register(request):
-
+def register_view(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('home')  
+            form.save()
+            messages.success(request, 'Your account has been created successfully!')
+            return redirect('login')  # Redirect to the login page after successful registration
+        else:
+            # If form is not valid, pass the form errors to the context (no need to use messages here)
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.capitalize()}: {error}")
     else:
-        form = AuthenticationForm()
+        form = UserCreationForm()
 
-    return render(request, 'accounts/auth-signup.html', {'form': form})
-
-
-
-
-
-
-def password_reset(request):
-
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('home')  
-    else:
-        form = AuthenticationForm()
-
-    return render(request, 'accounts/auth-reset.html', {'form': form})
+    return render(request, 'register.html', {'form': form})
