@@ -4,9 +4,6 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout
 from django.http import HttpResponse
 
-def home_view(request):
-    return render(request, 'album.html')
-
 
 def login_view(request):
     if request.method == 'POST':
@@ -44,3 +41,6 @@ def register_view(request):
         form = UserCreationForm()
 
     return render(request, 'register.html', {'form': form})
+
+def logout_view(request):
+    return render(request, 'landing_page.html')
