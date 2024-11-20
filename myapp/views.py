@@ -53,6 +53,12 @@ def events_view(request):
 def artists_view(request):
     return render(request, 'landing_page.html')
 
+def profile_view(request):
+    return render(request, 'landing_page.html')
+
+def settings_view(request):
+    return render(request, 'landing_page.html')
+
 def search(request):
     return render(request, 'landing_page.html')
 

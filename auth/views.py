@@ -43,4 +43,5 @@ def register_view(request):
     return render(request, 'register.html', {'form': form})
 
 def logout_view(request):
-    return render(request, 'landing_page.html')
+    logout(request)
+    return redirect('login')
