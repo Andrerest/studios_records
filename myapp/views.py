@@ -7,7 +7,10 @@ def genero_list(request):
     
 
 def home_view(request):
-    artists = [
+    
+    
+    return render(request, 'landing_page.html',{"artists": artists})
+artists = [
     {
         "name": "Deadmau5",
         "description": "DJ y productor canadiense de música electrónica, famoso por su casco de ratón y éxitos como 'Strobe.'",
@@ -44,14 +47,13 @@ def home_view(request):
         "image_url": "https://www.billboard.com/wp-content/uploads/media/01-armin-van-buuren-press-photo-2014-650.jpg",
         "ticket_url": "armin.html"
     },
-    ]
-    return render(request, 'landing_page.html',{"artists": artists})
+    ]    
 
 def events_view(request):
     return render(request, 'events.html')
 
 def artists_view(request):
-    return render(request, 'landing_page.html')
+    return render(request, 'artista.html',{"artists": artists})
 
 def profile_view(request):
     return render(request, 'landing_page.html')
