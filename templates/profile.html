@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artista Form</title>
+    <style>
+        /* Basic styling for the dropdown container */
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        /* Button to trigger the dropdown */
+        .dropdown-btn {
+            display: block;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            border-radius: 5px;
+        }
+
+        /* Dropdown content (checkboxes) */
+        .dropdown-checkboxes {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 9999;
+            border-radius: 5px;
+        }
+
+        /* Style the checkboxes within the dropdown */
+        .dropdown-checkboxes label {
+            display: block;
+            padding: 5px;
+        }
+
+        .dropdown-checkboxes input {
+            margin-right: 10px;
+            margin-bottom: 8px;
+        }
+
+        /* When the dropdown is open, display the checkboxes */
+        .dropdown-container.open .dropdown-checkboxes {
+            display: block;
+        }
+
+        /* Style the label of the genres in the dropdown button */
+        .dropdown-btn span {
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Dropdown container for genre selection -->
+        <div class="dropdown-container">
+            <!-- Dropdown button showing selected genres -->
+            <div class="dropdown-btn">
+                {% for genre in form.generos.value %}
+                    <span>{{ genre }}</span>
+                {% empty %}
+                    <span>Select genres</span>
+                {% endfor %}
+            </div>
+
+            <!-- Hidden dropdown checkboxes -->
+            <div class="dropdown-checkboxes">
+                {% for genre in form.generos %}
+                    <label>
+                        {{ genre }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Other form fields -->
+        <div>
+            <label for="id_nombre">Nombre:</label>
+            {{ form.nombre }}
+        </div>
+
+        <div>
+            <label for="id_foto">Foto:</label>
+            {{ form.foto }}
+        </div>
+
+        <div>
+            <label for="id_descripcion">Descripcion:</label>
+            {{ form.descripcion }}
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        // JavaScript to toggle the visibility of the dropdown checkboxes
+        document.addEventListener("DOMContentLoaded", function() {
+            const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+            
+            dropdownBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const container = btn.closest('.dropdown-container');
+                    container.classList.toggle('open');
+                });
+            });
+            
+            // Close the dropdown if clicked outside
+            document.addEventListener('click', function(event) {
+                const isClickInside = event.target.closest('.dropdown-container');
+                if (!isClickInside) {
+                    document.querySelectorAll('.dropdown-container.open').forEach(function(container) {
+                        container.classList.remove('open');
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
