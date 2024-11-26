@@ -3,28 +3,38 @@ from .models import Artista
 from django.contrib.auth.models import User
 
 class ArtistaForm(forms.ModelForm):
-
-    email = forms.EmailField(
-        label="Correo Electrónico",
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su correo electrónico'})
-    )
-
     class Meta:
         model = Artista
         
-        fields = ['nombre', 'foto', 'descripcion']
+        fields = ['nombre','correo', 'foto', 'descripcion']
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el nombre del artista'}),
-            'foto': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
-
+            'nombre': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese el nombre del artista'
+            }),
+            'correo': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese el correo electrónico del artista'
+            }),
+            'foto': forms.ClearableFileInput(attrs={
+                'class': 'form-control-file'
+            }),
+            'descripcion': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese una descripción',
+                'rows': 4
+            }),
         }
         labels = {
             'nombre': 'Nombre',
+            'correo': 'Correo electrónico',
             'foto': 'Foto',
             'descripcion': 'Descripción',
+
         }
         help_texts = {
             'nombre': 'El nombre debe tener entre 3 y 100 caracteres.',
+            'correo': 'El correo electrónico debe de ser válido',
             'foto': 'Suba una imagen válida, de un tamaño máximo de 5MB.',
             'descripcion': 'Máximo 500 caracteres permitidos.',
         }
@@ -43,6 +53,10 @@ class ArtistaForm(forms.ModelForm):
     # Custom validation for 'foto' (if needed)
     def clean_foto(self):
         foto = self.cleaned_data.get('foto')
+        if not foto:
+            # If no photo is provided, return None, and the default image will be used
+            return None
+            
         if foto:
             # Check if the file is a valid image
             if not foto.content_type.startswith('image'):

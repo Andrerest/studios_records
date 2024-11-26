@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% include "components/head.html" %}
+    </head>
+    <style>
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem; /* Uniform spacing between form groups */
+        }
+
+        label {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #e0e0e0; /* Light text color for labels */
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #444;
+            background-color: #2d2d2d;
+            color: #f0f0f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.6);
+        }
+
+        .text-danger {
+            font-size: 0.875rem;
+            color: #ff4d4d;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+
+<body style="background-color: #1a1a1a; color: #f0f0f0;">
+
+    <header>
+        {% include "components/navbar.html" %}
+    </header>
+
+    <main class="container justify-content-center align-items-center" style="margin-top: 80px;">
+        <div class="container p-4" style="background-color: #2d2d2d; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4); border-radius: 12px; width: 90%; max-width: 800px;">
+            <h1 class="mb-4 text-center" style="color: #e0e0e0;">Nueva Ubicacion</h1>
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                
+                <div>
+                    <label for="id_nombre">Nombre de la ubicacion</label>
+                    {{ form.nombre }}
+                    {% for error in form.nombre.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Direccion de la ubicacion -->
+                <div>
+                    <label for="id_direccion">Dirección de la ubicacion</label>
+                    {{ form.direccion }}
+                    {% for error in form.direccion.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pais -->
+                <div>
+                    <label for="id_pais">Pais</label>
+                    {{ form.pais }}
+                    {% for error in form.pais.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Ciudad -->
+                <div>
+                    <label for="id_ciudad">Ciudad</label>
+                    {{ form.ciudad }}
+                    {% for error in form.ciudad.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Botones -->
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-outline-light">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Guardar</button>
+                </div>
+            </form>
+        </div>
+        
+    </main>
+
+        <script>
+        $(document).ready(function() {
+            // Listen for change events on the pais select
+            $('#id_pais').change(function() {
+                var pais_id = $(this).val();  // Get selected pais ID
+
+                // Send an AJAX request to fetch ciudades based on the selected pais
+                $.ajax({
+                    url: '{% url "get_ciudades" %}',  // URL of the view
+                    data: {
+                        'pais_id': pais_id
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        var ciudad_select = $('#id_ciudad');  // Get ciudad select element
+                        ciudad_select.empty();  // Clear existing cities
+
+                        // Add a default option
+                        ciudad_select.append('<option value="">Select a city</option>');
+
+                        // Loop through the cities and add them as options
+                        $.each(response.ciudades, function(index, ciudad) {
+                            ciudad_select.append('<option value="' + ciudad.id + '">' + ciudad.nombre + '</option>');
+                        });
+                    },
+                    error: function() {
+                        alert('Error fetching cities');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

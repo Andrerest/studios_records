@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 class Artista(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
     nombre = models.CharField(max_length=100, unique=True)
-    foto = models.ImageField(upload_to="artistas/", blank=True)
+    correo = models.EmailField()
+    foto = models.ImageField(upload_to="artistas/", blank=True, default='images/default_profile_image.png')
     descripcion = models.TextField(blank=True)
     seguidores = models.ManyToManyField(User, related_name="seguidores")
     nacionalidad = models.CharField(max_length=50, blank=True)

@@ -2,78 +2,131 @@
 <html>
     <head>
         {% include "components/head.html" %}
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #121212;  /* Dark background */
+                color: #E0E0E0;  /* Light text color */
+            }
+
+            .container {
+                width: 80%;
+                max-width: 900px;
+                margin: 50px auto;
+                padding: 20px;
+                background-color: #1E1E1E;  /* Dark background for the form */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);  /* Darker shadow */
+                border-radius: 8px;
+            }
+
+            h1 {
+                text-align: center;
+                color: #B0BEC5;  /* Lighter gray for header */
+                font-size: 2rem;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            label {
+                font-weight: bold;
+                display: block;
+                margin-bottom: 5px;
+                color: #B0BEC5;  /* Light label text */
+            }
+
+            input, textarea, select {
+                width: 100%;
+                padding: 12px;
+                font-size: 16px;
+                border-radius: 4px;
+                border: 1px solid #333;  /* Darker border */
+                background-color: #333;  /* Dark background for inputs */
+                color: #E0E0E0;  /* Light text inside inputs */
+                box-sizing: border-box;
+            }
+
+            input[type="file"] {
+                padding: 6px;
+                border: 1px solid #333;
+                background-color: #333;
+                color: #E0E0E0;
+                cursor: pointer;
+            }
+
+            input:focus, textarea:focus, select:focus {
+                border-color: #6200EE;  /* Focus border color */
+                outline: none;
+            }
+
+            .error {
+                color: #FF5252;  /* Error text color */
+                font-size: 14px;
+                margin-top: 5px;
+            }
+
+            .submitted-data {
+                margin-top: 30px;
+                background-color: #2C2C2C;  /* Dark background for submitted data */
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            /* Image preview styling */
+            #imagePreview {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            #imagePreview img {
+                max-width: 100px;
+                height: auto;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+            }
+
+            .form-control {
+                background-color: #333;
+                border-color: #444;
+            }
+
+            .form-control:focus {
+                border-color: #6200EE;
+                background-color: #333;
+            }
+
+            .btn-outline-secondary {
+                background-color: #444;
+                color: #E0E0E0;
+                border: 1px solid #444;
+                padding: 12px 20px;
+                text-decoration: none;
+            }
+
+            .btn-outline-secondary:hover {
+                background-color: #555;
+                color: #E0E0E0;
+                border-color: #555;
+            }
+        </style>
     </head>
-    <style>
-        form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem; /* Uniform spacing between form groups */
-}
-
-/* Style for labels to always appear above inputs */
-label {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: #e0e0e0; /* Light text color for labels */
-}
-
-/* Universal style for input, textarea, and select elements */
-input, textarea, select {
-    width: 100%; /* Full width */
-    padding: 0.75rem; /* Comfortable padding */y
-    border: 1px solid #444; /* Subtle border */
-    background-color: #2d2d2d; /* Match container's background */
-    color: #f0f0f0; /* Light text */
-    border-radius: 6px; /* Smooth rounded corners */
-    font-size: 1rem; /* Consistent font size */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth focus effects */
-}
-
-/* Focus styles for better user experience */
-input:focus, textarea:focus, select:focus {
-    outline: none; /* Remove default outline */
-    border-color: #007bff; /* Highlight border color */
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.6); /* Subtle glow */
-}
-
-/* Style for error messages */
-.text-danger {
-    font-size: 0.875rem; /* Slightly smaller font for errors */
-    color: #ff4d4d; /* Noticeable red color for errors */
-}
-
-/* Style for buttons */
-button {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
-}
-
-button:hover {
-    opacity: 0.9;
-}
-
-    </style>
-
-
-<body style="background-color: #1a1a1a; color: #f0f0f0;">
+<body>
 
     <header>
         {% include "components/navbar.html" %}
     </header>
 
     <main class="container justify-content-center align-items-center" style="margin-top: 80px;">
-        <div class="container p-4" style="background-color: #2d2d2d; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4); border-radius: 12px; width: 90%; max-width: 800px;">
             <h1 class="mb-4 text-center" style="color: #e0e0e0;">Crear Evento</h1>
             <form method="post" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
                 
                 <!-- Nombre del Evento -->
-                <div>
+                <div class="form-group">
                     <label for="id_nombre">Nombre del Evento</label>
                     {{ form.nombre }}
                     {% for error in form.nombre.errors %}
@@ -82,17 +135,19 @@ button:hover {
                 </div>
 
                 <!-- Fotos del Evento -->
-                <div>
-                    <label for="id_fotos">Fotos del Evento</label>
-                    <input type="file" id="id_fotos" name="fotos" multiple accept="image/*" onchange="previewImages(event)">
-                    <div id="imagesPreview" class="d-flex mt-2 flex-wrap gap-2"></div>
-                    {% for error in form.fotos.errors %}
+                <div class="form-group mb-3">
+                    <label for="id_foto" class="form-label text-light">Foto</label>
+                    {{ form.foto }}
+                    <div class="mt-2">
+                        <img id="imagePreview" src="#" alt="Image Preview" class="img-fluid" style="display:none; max-width: 100px;">
+                    </div>
+                    {% for error in form.foto.errors %}
                         <div class="text-danger">{{ error }}</div>
                     {% endfor %}
                 </div>
         
                 <!-- Descripción -->
-                <div>
+                <div class="form-group">
                     <label for="id_descripcion">Descripción</label>
                     {{ form.descripcion }}
                     {% for error in form.descripcion.errors %}
@@ -101,120 +156,148 @@ button:hover {
                 </div>
         
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="id_fecha_inicio">Fecha de Inicio</label>
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="id_fecha_inicio">Fecha y Hora de Inicio</label>
                         {{ form.fecha_inicio }}
-                        {% for error in form.fecha_inicio.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
+                        {% if form.fecha_inicio.errors %}
+                            <div class="text-danger">
+                                {% for error in form.fecha_inicio.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="id_fecha_fin">Fecha de Fin</label>
+                        
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="id_fecha_fin">Fecha y Hora de Fin</label>
                         {{ form.fecha_fin }}
-                        {% for error in form.fecha_fin.errors %}
+                        {% if form.fecha_fin.errors %}
+                            <div class="error">
+                                {% for error in form.fecha_fin.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+        
+                <div class="row">
+                    <div class="form-group col-md-6 mb-3">
+                            <label for="id_pais">Pais</label>
+                            {{ form.pais }}
+                            {% for error in form.pais.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                    </div>
+
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="id_ciudad">Ciudad</label>
+                        {{ form.ciudad }}
+                        {% for error in form.ciudad.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_direccion">Dirección</label>
+                    {{ form.direccion }}
+                    {% for error in form.direccion.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="id_entrada_general">Entrada General</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Lps. </span>  <!-- This is where the prefix goes -->
+                            {{ form.entrada_general }}
+                        </div>
+                        
+                        {% for error in form.entrada_general.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                
+                    <div class="col-md-6 mb-3">
+                        <label for="id_cantidad_general">Capacidad General</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Personas</span>  <!-- This is where the prefix goes -->
+                            {{ form.cantidad_general }}
+                        </div>
+                        
+                        {% for error in form.cantidad_general.errors %}
                             <div class="text-danger">{{ error }}</div>
                         {% endfor %}
                     </div>
                 </div>
-        
+
                 <div class="row">
+              
+                    <!-- Precio de Entrada -->
                     <div class="col-md-6 mb-3">
-                        <label for="pais">Selecciona un País:</label>
-                        <select id="pais" name="pais" class="form-select">
-                            <option value="">Seleccione un País</option>
-                            {% for pais in paises %}
-                                <option value="{{ pais.id }}">{{ pais.nombre }}</option>
-                            {% endfor %}
-                        </select>
+                        <label for="id_entrada_vip">Entrada Vip</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Lps. </span>  <!-- This is where the prefix goes -->
+                            {{ form.entrada_vip }}
+                        </div>
+                        
+                        {% for error in form.entrada_vip.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="ubicacion">Selecciona una Ubicación:</label>
-                        <select id="ubicacion" name="ubicacion" class="form-select">
-                            <option value="">Seleccione una Ubicación</option>
-                            {% for ubicacion in ubicaciones %}
-                                <option value="{{ ubicacion.id }}">{{ ubicacion.nombre }}</option>
-                            {% endfor %}
-                        </select>
+                        <label for="id_cantidad_vip">Capacidad Vip</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Personas</span>  <!-- This is where the prefix goes -->
+                            {{ form.cantidad_vip }}
+                        </div>
+                        {% for error in form.cantidad_vip.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
                     </div>
-                </div>
-
-                <!-- Capacidad -->
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                    <label for="id_capacidad">Capacidad</label>
-                    <input type="number" id="id_capacidad" name="capacidad" min="1">
-                    {% for error in form.capacidad.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
-        
-                <!-- Precio de Entrada -->
-                <div class="col-md-6 mb-3">
-                    <label for="id_precio_entrada">Precio de Entrada</label>
-                    <input type="number" id="id_precio_entrada" name="precio_entrada" min="0">
-                    {% for error in form.precio_entrada.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
                 </div>
                       
                 <!-- Botones -->
                 <div class="d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-outline-light">Cancelar</button>
+                    <a href="{% url 'events:event_list' %}" class="btn btn-outline-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Guardar</button>
                 </div>
-            </form>
-        </div>
-        
+            </form>     
     </main>
 
     <script>
-        // Previsualización de imágenes seleccionadas
-        function previewImages(event) {
-            const previewContainer = document.getElementById('imagesPreview');
-            previewContainer.innerHTML = ''; // Limpiar previas imágenes
-
-            Array.from(event.target.files).forEach(file => {
+        function previewImage(event) {
+            const input = event.target;
+            const file = input.files[0];
+            const preview = document.getElementById('imagePreview');
+            
+            // Check if file is an image
+            if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.maxWidth = '100px';
-                    img.style.height = 'auto';
-                    img.style.border = '1px solid #ccc';
-                    img.style.borderRadius = '8px';
-                    previewContainer.appendChild(img);
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';  // Show the image
                 };
                 reader.readAsDataURL(file);
-            });
+            } else {
+                preview.style.display = 'none';  // Hide the image if not a valid image
+            }
         }
+        
+        // Attach the previewImage function to the foto field onchange event
+        document.getElementById('id_foto').addEventListener('change', previewImage);
     </script>
+    <script>
+    function validateNumberInput(event) {
+    // This will allow numbers and the decimal point only
+    event.target.value = event.target.value.replace(/[^0-9.]/g, '');
+    }
+    </script>
+    
 
-<script>
-    document.getElementById('pais').addEventListener('change', function() {
-        const paisId = this.value;
-        const ubicacionSelect = document.getElementById('ubicacion');
-        
-        // Limpiar las opciones anteriores de ubicaciones
-        ubicacionSelect.innerHTML = '<option value="">Seleccione una Ubicación</option>';
-        
-        if (paisId) {
-            // Usar AJAX para obtener las ubicaciones del país seleccionado
-            fetch(`/obtener_ubicaciones/?pais_id=${paisId}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Llenar el combobox de ubicaciones con las nuevas opciones
-                    data.forEach(ubicacion => {
-                        const option = document.createElement('option');
-                        option.value = ubicacion.id;
-                        option.textContent = ubicacion.nombre;
-                        ubicacionSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error al cargar las ubicaciones:', error));
-        }
-    });
-</script>
 </body>
 </html>

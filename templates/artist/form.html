@@ -2,20 +2,130 @@
 <html>
     <head>
         {% include "components/head.html" %}
-        </head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #121212;  /* Dark background */
+                color: #E0E0E0;  /* Light text color */
+            }
+
+            .container {
+                width: 80%;
+                max-width: 900px;
+                margin: 50px auto;
+                padding: 20px;
+                background-color: #1E1E1E;  /* Dark background for the form */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);  /* Darker shadow */
+                border-radius: 8px;
+            }
+
+            h1 {
+                text-align: center;
+                color: #B0BEC5;  /* Lighter gray for header */
+                font-size: 2rem;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            label {
+                font-weight: bold;
+                display: block;
+                margin-bottom: 5px;
+                color: #B0BEC5;  /* Light label text */
+            }
+
+            input, textarea, select {
+                width: 100%;
+                padding: 12px;
+                font-size: 16px;
+                border-radius: 4px;
+                border: 1px solid #333;  /* Darker border */
+                background-color: #333;  /* Dark background for inputs */
+                color: #E0E0E0;  /* Light text inside inputs */
+                box-sizing: border-box;
+            }
+
+            input[type="file"] {
+                padding: 6px;
+                border: 1px solid #333;
+                background-color: #333;
+                color: #E0E0E0;
+                cursor: pointer;
+            }
+
+            input:focus, textarea:focus, select:focus {
+                border-color: #6200EE;  /* Focus border color */
+                outline: none;
+            }
+
+            .error {
+                color: #FF5252;  /* Error text color */
+                font-size: 14px;
+                margin-top: 5px;
+            }
+
+            .submitted-data {
+                margin-top: 30px;
+                background-color: #2C2C2C;  /* Dark background for submitted data */
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            /* Image preview styling */
+            #imagePreview {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            #imagePreview img {
+                max-width: 100px;
+                height: auto;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+            }
+
+            .form-control {
+                background-color: #333;
+                border-color: #444;
+            }
+
+            .form-control:focus {
+                border-color: #6200EE;
+                background-color: #333;
+            }
+
+            .btn-outline-secondary {
+                background-color: #444;
+                color: #E0E0E0;
+                border: 1px solid #444;
+                padding: 12px 20px;
+                text-decoration: none;
+            }
+
+            .btn-outline-secondary:hover {
+                background-color: #555;
+                color: #E0E0E0;
+                border-color: #555;
+            }
+        </style>
+    </head>
     <body>
         <header>
             {% include "components/navbar.html" %}
         </header>
 
-        <main class="container ">
-            <div class="container p-5" style="background-color: #242424; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); border-radius: 8px;">
+        <main class="container">
                 <h1 class="mb-4 text-center text-light">Crear Artista</h1>
-                <form method="post" enctype="multipart/form-data" novalidate >
+                <form method="post" enctype="multipart/form-data" novalidate>
                     {% csrf_token %}
                     
                     <!-- Nombre Artístico -->
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="id_nombre" class="form-label text-light">Nombre Artístico</label>
                         {{ form.nombre }}
                         {% for error in form.nombre.errors %}
@@ -24,16 +134,16 @@
                     </div>
 
                     <!-- Email Field -->
-                    <div class="mb-3">
-                        <label for="id_email" class="form-label text-light">Correo Electrónico</label>
-                        {{ form.email }}
-                        {% for error in form.email.errors %}
+                    <div class="form-group mb-3">
+                        <label for="id_correo" class="form-label text-light">Correo Electrónico</label>
+                        {{ form.correo }}
+                        {% for error in form.correo.errors %}
                             <div class="text-danger">{{ error }}</div>
                         {% endfor %}
                     </div>
                     
                     <!-- Foto Field with Preview -->
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="id_foto" class="form-label text-light">Foto</label>
                         <input type="file" id="id_foto" class="form-control" name="foto" accept="image/*" onchange="previewImage(event)">
                         <div class="mt-2">
@@ -45,7 +155,7 @@
                     </div>
 
                     <!-- Descripción Field -->
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="id_descripcion" class="form-label text-light">Descripción</label>
                         {{ form.descripcion }}
                         {% for error in form.descripcion.errors %}
@@ -54,15 +164,12 @@
                     </div>
 
                     <!-- Submit Buttons -->
-                    <div class="d-flex justify-content-between">
-                        <button type="submit" class="btn btn-outline-secondary">Cancelar</button>
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'artists:artist_list' %}" class="btn btn-outline-secondary">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                 </form>
-            </div>
         </main>
-
-
 
         <script>
             function previewImage(event) {

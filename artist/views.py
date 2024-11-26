@@ -6,15 +6,15 @@ from django.db.models import Count
 
 
 def artist_list(request):
-    all_artists = Artista.objects.all()
-    """
-    sorted_artists = sorted(all_artists, key=lambda artista: artista.total_seguidores(), reverse=True)
-    top_artists = sorted_artists[:] 
-    """
+    artista = None
+    if request.user.is_authenticated:
+        artista = Artista.objects.filter(user=request.user).first()
 
+
+    all_artists = Artista.objects.all()
     top_artists_data = [
         {
-            "image_url": artist.foto.url if artist.foto else "static\images\default_profile_image.png",
+            "image_url": artist.foto.url if artist.foto else "media\artistas\default_profile_image.png",
             "name": artist.nombre,
             "description": artist.descripcion,
             "followers_count": artist.total_seguidores(),
@@ -22,7 +22,8 @@ def artist_list(request):
         }
         for artist in all_artists
     ]
-    return render(request, 'artist/list.html', {'top_artists': top_artists_data})
+
+    return render(request, 'artist/list.html', {'artista': artista,'top_artists': top_artists_data})
 
 def artist_detail(request, artist_username):
     artist = get_object_or_404(Artista, user__username=artist_username)
@@ -48,18 +49,20 @@ def follow_artist(request, artist_id):
 
 @login_required
 def create_artist(request):
+    artist = Artista.objects.filter(user=request.user).first()
+
     if request.method == "POST":
-        form = ArtistaForm(request.POST, request.FILES)
-        print("Form: ", form.data)
+        # Bind the form data and files to the existing artist or create a new one
+        form = ArtistaForm(request.POST, request.FILES, instance=artist)
         if form.is_valid():
             artist = form.save(commit=False)
-            artist.user = request.user
+            artist.user = request.user  # Ensure the user is always set to the logged-in user
             artist.save()
-            return redirect('artist_list')
-            #return redirect('artist_detail', pk=artist.pk)  # Adjust the redirect
+            return redirect('artists:artist_list')  # Redirect to the artist list or another page
         else:
             print(form.errors)
     else:
-        
-        form = ArtistaForm()
+        # Prepopulate the form with the artist's instance if it exists
+        form = ArtistaForm(instance=artist)
+
     return render(request, 'artist/form.html', {'form': form})

@@ -5,7 +5,9 @@ app_name = 'events'
 
 urlpatterns = [
     path('', views.event_list, name='event_list'),
+    path('<int:event_id>', views.event_detail, name='event_detail'),
     path('new/', views.create_event, name='event_form'),
-    path('<str:event_id>/', views.event_list, name='artist_detail'),
-    path('<int:event_id>/follow/', views.event_list, name='follow_artist'),
+    path('edit/<int:id>/', views.edit_event, name='edit_event'),
+
+    path('buy-ticket/', views.buy_ticket, name='buy_ticket'),
 ]
