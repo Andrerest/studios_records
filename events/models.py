@@ -33,33 +33,21 @@ class Evento(models.Model):
         verbose_name_plural = "Eventos"
 
 
-class Ticket(models.Model):
-    event = models.ForeignKey(Evento, on_delete=models.CASCADE, related_name='tickets')
-    type = models.CharField(max_length=100)  # e.g., VIP, General Admission
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.CharField(max_length=3, default='USD')  # Optional
-
-    def __str__(self):
-        return f"{self.type} - {self.price} {self.currency}"
-
-# Modelo para Registraciones
-class Registracion(models.Model):
-    evento = models.ForeignKey(Evento, related_name='registraciones', on_delete=models.CASCADE)
-    usuario = models.ForeignKey(User, related_name='registraciones', on_delete=models.CASCADE)
-    fecha_registrado = models.DateTimeField(auto_now_add=True)
-    tipo_entrada = models.CharField(
-        max_length=20,
-        choices=[("general", "General"), ("vip", "VIP")],
-        default="general"
-    )
-    estado = models.CharField(
-        max_length=20,
-        choices=[("pendiente", "Pendiente"), ("confirmada", "Confirmada"), ("cancelada", "Cancelada")],
-        default="pendiente"
-    )
-
-    def __str__(self):
-        return f"{self.usuario.username} - {self.evento.nombre} ({self.tipo_entrada})"
+class Transaction(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+    ]
     
-    class Meta:
-        unique_together = ('evento', 'usuario', 'tipo_entrada')  # Prevent multiple registrations for the same event and ticket type by the same user
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
+    ticket_type = models.CharField(max_length=20)
+    ticket_quantity = models.PositiveIntegerField()
+    ticket_price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Transaction {self.id} - {self.evento.nombre} - {self.status}"

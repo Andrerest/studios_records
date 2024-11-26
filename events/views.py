@@ -5,7 +5,7 @@ from .models import Evento
 from django.http import JsonResponse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-
+from decimal import Decimal
 
 def event_list(request):
     artista = None
@@ -98,11 +98,100 @@ def test_evento_form(request):
         form = EventoForm()
     return render(request, 'event/test.html', {'form': form})
 
-def buy_ticket(request):
-    artista = None
-    if request.user.is_authenticated:
-        artista = Artista.objects.filter(user=request.user).first()
+def add_to_cart(request, evento_id):
+    evento = get_object_or_404(Evento, id=evento_id)
 
-    return render(request, 'event/buy_ticket.html', {
-        'artista': artista,
+    # Get ticket type and quantity from POST request
+    ticket_type = request.POST.get('ticketType')
+    try:
+        ticket_quantity = int(request.POST.get('ticketQuantity', 0))
+    except ValueError:
+        ticket_quantity = 0  # Ensure a valid integer if it's not present or invalid
+
+    # Initialize or get the cart from the session
+    cart = request.session.get('cart', [])
+
+    # Get ticket price and convert it to float
+    ticket_price = float(evento.entrada_general) if ticket_type == 'general' else float(evento.entrada_vip)
+
+    # Add the selected ticket to the cart
+    cart.append({
+        'evento_id': evento.id,
+        'evento_name': evento.nombre,
+        'ticket_type': ticket_type,
+        'ticket_quantity': ticket_quantity,
+        'ticket_price': ticket_price,  # Store price as float
+    })
+
+    # Save the updated cart in the session
+    request.session['cart'] = cart
+
+    # Redirect to the cart page
+    return redirect('events:cart')
+
+
+def cart(request):
+    # Get the cart from the session
+    cart = request.session.get('cart', [])
+    
+    # Calculate the total amount, ensuring prices are floats
+    total = sum(item['ticket_price'] * item['ticket_quantity'] for item in cart)
+
+    # Ensure the total is a float
+    total = float(total)
+
+    # Render the checkout page with cart and total context
+    return render(request, 'event/checkout.html', {
+        'cart': cart,
+        'total': total,
+    })
+
+
+@login_required
+def checkout(request):
+    # Get the cart from the session
+    cart = request.session.get('cart', [])
+    
+    if request.method == 'POST':
+        # Process the checkout
+        for item in cart:
+            evento = get_object_or_404(Evento, id=item['evento_id'])
+            
+            # Check for sufficient ticket quantity
+            if item['ticket_type'] == 'general' and item['ticket_quantity'] <= evento.cantidad_general:
+                evento.cantidad_general -= item['ticket_quantity']
+            elif item['ticket_type'] == 'vip' and item['ticket_quantity'] <= evento.cantidad_vip:
+                evento.cantidad_vip -= item['ticket_quantity']
+            else:
+                # If not enough tickets, redirect to an error page
+                return redirect('error_page')  # Or show a custom error message in the template
+
+            evento.save()  # Save the updated event data
+
+            # Save the transaction
+            total_amount = Decimal(item['ticket_price']) * item['ticket_quantity']
+            transaction = Transaction.objects.create(
+                user=request.user,
+                evento=evento,
+                ticket_type=item['ticket_type'],
+                ticket_quantity=item['ticket_quantity'],
+                ticket_price=Decimal(item['ticket_price']),
+                total_amount=total_amount,
+                status='completed',  # Update status to 'completed' after processing payment
+            )
+            transaction.save()
+
+        # Here, you can add the logic to handle payment processing (e.g., via a payment gateway)
+
+        # Clear the cart from the session after checkout
+        request.session['cart'] = []
+
+        # Redirect to a confirmation page
+        return redirect('events:order_confirmation')  # Assuming you have a confirmation page
+
+    # If the method is GET, render the checkout page with cart and total
+    total = sum(item['ticket_price'] * item['ticket_quantity'] for item in cart)
+    return render(request, 'event/checkout.html', {
+        'cart': cart,
+        'total': total,
     })

@@ -98,7 +98,8 @@
 
         <!-- Ticket Purchase Form -->
         <h3>Compra entradas</h3>
-        <form>
+        <form method="POST" action="{% url 'events:add_to_cart' evento.id %}">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="ticketType">Tipo de Entrada</label>
                 <select id="ticketType" name="ticketType" class="form-control" required>

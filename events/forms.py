@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Evento, Registracion
+from .models import Evento
 import datetime
 # Formulario para crear un Evento
 class EventoForm(forms.ModelForm):
@@ -63,40 +63,3 @@ class EventoForm(forms.ModelForm):
             if foto.size > 5 * 1024 * 1024:  # 5 MB limit
                 raise forms.ValidationError("La imagen no debe exceder los 5MB.")
         return foto
-
-# Formulario para registrarse en un evento
-class RegistracionForm(forms.ModelForm):
-    tipo_entrada = forms.ChoiceField(
-        choices=[("general", "General"), ("vip", "VIP")],
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        label='Tipo de Entrada'
-    )
-
-    class Meta:
-        model = Registracion
-        fields = ['evento', 'usuario', 'tipo_entrada', 'estado']
-        labels = {
-            'evento': 'Evento',
-            'usuario': 'Usuario',
-            'estado': 'Estado de la Registración',
-            'tipo_entrada': 'Tipo de Entrada',
-        }
-
-    def clean(self):
-        cleaned_data = super().clean()
-        evento = cleaned_data.get('evento')
-        usuario = cleaned_data.get('usuario')
-        tipo_entrada = cleaned_data.get('tipo_entrada')
-
-        # Validar que el evento no haya alcanzado su capacidad para el tipo de entrada
-        if evento:
-            if tipo_entrada == "general" and evento.registraciones.filter(tipo_entrada="general").count() >= evento.cantidad_general:
-                raise ValidationError(f"El evento '{evento.nombre}' ha alcanzado la capacidad máxima para entradas generales.")
-            elif tipo_entrada == "vip" and evento.registraciones.filter(tipo_entrada="vip").count() >= evento.cantidad_vip:
-                raise ValidationError(f"El evento '{evento.nombre}' ha alcanzado la capacidad máxima para entradas VIP.")
-        
-        # Validar que el usuario no esté ya registrado para el mismo evento con el mismo tipo de entrada
-        if evento and usuario and Registracion.objects.filter(evento=evento, usuario=usuario, tipo_entrada=tipo_entrada).exists():
-            raise ValidationError(f"El usuario {usuario.username} ya está registrado para este evento con tipo de entrada {tipo_entrada}.")
-
-        return cleaned_data
