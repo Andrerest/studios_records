@@ -1,0 +1,27 @@
+form label {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+form input, form textarea, form select {
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+form input:focus, form textarea:focus, form select:focus {
+    border-color: #1877f2;
+    outline: none;
+    box-shadow: 0 0 5px rgba(24, 119, 242, 0.5);
+}
+
+button.btn-primary {
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+button.btn-primary:hover {
+    background-color: #165dd0;
+}

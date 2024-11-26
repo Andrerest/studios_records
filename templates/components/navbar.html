@@ -1,8 +1,9 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-md fixed-top bg-dark navbar-dark mb-4">
+<nav class="navbar navbar-expand-md sticky-top navbar-dark bg-dark shadow-sm mb-3">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">Studio Records</a>
+        <img class="img-icon" src="{% static 'images/icon.png' %}" alt="logo.png">
+        <a class="navbar-brand text-white fw-bold fs-4" href="{% url 'home' %}">Studio Records</a>
         <button 
             class="navbar-toggler" 
             type="button" 
@@ -16,19 +17,19 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Inicio</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active text-primary{% else %}text-white{% endif %}" href="{% url 'home' %}">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'events' %}active{% endif %}" href="{% url 'events' %}">Eventos</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'events' %}active text-primary{% else %}text-white{% endif %}" href="{% url 'events:event_list' %}">Eventos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'artists' %}active{% endif %}" href="{% url 'artists' %}">Artistas</a>
+                    <a class="nav-link {% if request.resolver_match.namespace == 'artists' %}active text-primary{% else %}text-white{% endif %}" 
+                    href="{% url 'artists:artist_list' %}">Artistas</a>                
                 </li>
             </ul>
-            <form class="d-flex me-2" method="get" action="{% url 'search' %}">
+<!--             <form class="d-flex me-2" method="get" action="{% url 'search' %}">
                 <input class="form-control me-2" type="search" placeholder="Eventos o artistas" name="q" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Buscar</button>
-            </form>
+            </form> -->
             {% if user.is_authenticated %}
             <!-- Dropdown for Profile Options -->
             <div class="dropdown">
@@ -53,8 +54,65 @@
                 </ul>
             </div>
             {% else %}
-            <a class="btn btn-outline-light me-2" href="{% url 'login' %}">Inicia Sesión</a>
+            <a class="btn btn-login me-2" href="{% url 'login' %}">Inicia Sesión</a>
+            <a class="btn me-2 btn-register" href="{% url 'register' %}">Registrate</a>
             {% endif %}
         </div>
     </div>
 </nav>
+
+<!-- Include your CSS here -->
+<style>
+    /* Register button styles */
+    .btn-register {
+        background-color: #6A4C9C; 
+        color: #f1f1f1;
+    }
+    .btn-register:hover {
+        background-color: #53397C; /* Darker purple shade for hover effect */
+        color: #f1f1f1; /* White text color */
+    }
+
+    /* Login button styles */
+    .btn-login {
+        border-color: #6A4C9C;
+        color: #f1f1f1;
+    }
+    .btn-login:hover {
+        background-color: #6A4C9C;
+        color: #f1f1f1; /* Light text color */
+    }
+    /* Active link color for navbar */
+    .navbar-nav .nav-link.active {
+        color: #6A4C9C !important;
+        font-weight: bold;
+    }
+
+    /* Navbar hover effects */
+    .navbar-nav .nav-link:hover {
+        color: #FF5D8F !important;
+    }
+
+    /* Profile dropdown hover effect */
+    .dropdown-menu .dropdown-item:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Button hover effects */
+    .btn-outline-light:hover {
+        background-color: #6A4C9C;
+        color: white;
+    }
+
+    /* Add shadow to navbar */
+    .navbar {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .img-icon{
+        width:50px;
+        height:50px;
+        object-fit:cover; 
+        margin-right:0.5rem;
+    }
+</style>

@@ -1,0 +1,11 @@
+// Override Bootstrap colors in your custom.scss
+$primary: #6C63FF; // Vivid Purple
+$secondary: #4CB8F4; // Electric Blue
+$success: #32E875; // Neon Green
+$warning: #FFD700; // Golden Yellow
+$gray-100: #F1F1F1; // Soft Gray
+$dark: #2B2B2B; // Charcoal Black
+$body-bg: $gray-100;
+$body-color: #6E6E6E; // Cool Gray for text
+
+@import "bootstrap";

@@ -1,0 +1,88 @@
+{% include "components/head.html" %}
+<body>
+    {% include "components/navbar.html" %}
+
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Artist Profile Section -->
+            <aside class="col-md-4">
+                <div class="card text-center">
+                    <img 
+                        src="{{ artist.image_url }}" 
+                        class="card-img-top rounded-circle mx-auto mt-3" 
+                        alt="{{ artist.name }}'s Picture" 
+                        style="width: 150px; height: 150px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ artist.name }}</h5>
+                        <p class="card-subtitle text-muted">Music Genre: {{ artist.genre }}</p>
+                        <p class="card-text mt-2">{{ artist.description }}</p>
+
+                        <!-- Social Media Links -->
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                            <a href="https://twitter.com/{{ artist.user.username }}" 
+                               class="btn btn-outline-primary btn-sm">
+                                Twitter
+                            </a>
+                            <a href="https://instagram.com/{{ artist.user.username }}" 
+                               class="btn btn-outline-danger btn-sm">
+                                Instagram
+                            </a>
+                            <a href="https://spotify.com/{{ artist.user.username }}" 
+                               class="btn btn-outline-success btn-sm">
+                                Spotify
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Upcoming Events Section -->
+            <main class="col-md-8">
+                <section>
+                    <h3 class="mb-3">Upcoming Events</h3>
+                    {% if upcoming_events %}
+                        <div class="list-group">
+                            {% for event in upcoming_events %}
+                                <article class="list-group-item">
+                                    <h5 class="mb-1">{{ event.title }}</h5>
+                                    <p class="mb-1">{{ event.description }}</p>
+                                    <small>{{ event.event_date|date:"F j, Y" }} - {{ event.location }}</small>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No upcoming events at the moment.</p>
+                    {% endif %}
+                </section>
+            </main>
+        </div>
+
+        <!-- Music & Videos Section -->
+        <section class="mt-5">
+            <h3 class="mb-3">Featured Tracks & Videos</h3>
+            {% if featured_tracks %}
+                <div class="row">
+                    {% for track in featured_tracks %}
+                        <article class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ track.title }}</h5>
+                                    <a href="{{ track.url }}" 
+                                       class="btn btn-outline-success">
+                                        Listen Now
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No featured tracks available.</p>
+            {% endif %}
+        </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

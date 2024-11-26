@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<head>
+  {% include "components/head.html" %}
+  <style>
+    /* General dark theme colors */
+    body {
+        background-color: #181818; /* Dark background */
+        color: #e0e0e0; /* Light text for readability */
+    }
+
+    header {
+        background-color: #6A4C9C; /* Highlighted dark purple header */
+        color: #f2f2f2;
+    }
+
+    footer {
+        background-color: #121212; /* Match dark theme */
+        color: #e0e0e0;
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    /* Card styling */
+    .event-card {
+        background-color: #242424; /* Dark card background */
+        border: none; /* Remove borders for a sleek look */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        cursor: pointer;
+        color: #e0e0e0;
+    }
+
+    .event-card:hover {
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1); /* Softer white glow on hover */
+        transform: scale(1.05); /* Slight zoom effect */
+    }
+
+    .event-img {
+        transition: transform 0.3s ease-in-out;
+        object-fit: cover;
+        height: 250px;
+        width: 100%;
+        border-bottom: 2px solid #6A4C9C; /* Accent color for image divider */
+    }
+
+    /* Buttons */
+    .btn-outline-secondary {
+        color: #e0e0e0;
+        border-color: #6A4C9C; /* Accent color */
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6A4C9C; /* Match accent on hover */
+        color: #fff;
+    }
+
+    .btn-primary {
+        background-color: #6A4C9C; /* Accent color */
+        border-color: #6A4C9C;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #824EAB; /* Slightly lighter hover effect */
+    }
+
+    /* Text and section adjustments */
+    h1, h3 {
+        color: #f2f2f2; /* Light header text */
+    }
+
+    .card-text {
+        color: #c0c0c0; /* Muted text for descriptions */
+    }
+
+    /* Adjust card layout on mobile */
+    @media (max-width: 576px) {
+        .event-img {
+            height: 150px;
+        }
+        .card-body {
+            padding: 1rem;
+        }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    {% include "components/navbar.html" %}
+    <section class="py-5 text-center">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Eventos</h1>
+                <p class="lead">Descubre los eventos que tenemos organizados. ¡No te pierdas ninguna actividad!</p>
+                
+                <!-- Button for events registration or form -->
+                <a href="{% url 'events:event_form' %}" class="btn btn-outlined-light btn-lg">¿Organizas eventos? Regístrate aquí</a>
+            </div>
+        </div>
+    </section>
+  </header>
+
+  <main class="container">
+      <section class="album py-5">
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+              {% for event in upcoming_events %}
+                  <div class="col">
+                      <div class="card event-card">
+                          <img class="card-img-top event-img" src="{{ event.image_url }}" alt="Image of {{ event.title }}">
+                          <div class="card-body d-flex flex-column">
+                            
+                              <h3 class="card-title">{{ event.title }}</h3>
+                              <small class="mb-2">{{ event.date }}</small>
+                              <p class="card-text">{{ event.description|slice:":150" }}...</p>
+                              <div class="mt-auto d-flex justify-content-start align-items-center gap-2"> 
+                                <a href="{% url 'events:event_detail' event.id %}" class="btn btn-sm btn-outline-secondary">Ver detalles</a>
+                                <a class="btn btn-sm btn-primary">Asistir</a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              {% endfor %}
+          </div>
+      </section>
+  </main>
+
+  <footer>
+      {% include "components/footer.html" %}
+  </footer>
+
+  <script>
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+      btn.addEventListener('click', () => {
+          btn.textContent = btn.textContent === 'Asistir' ? 'Asistiendo' : 'Asistir';
+          btn.classList.toggle('btn-success');
+      });
+    });
+  </script>
+</body>
+</html>

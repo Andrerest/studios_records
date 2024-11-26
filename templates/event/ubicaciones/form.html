@@ -1,0 +1,108 @@
+<!-- ubicacion_form.html -->
+<!-- Modal Structure -->
+<div class="modal fade" id="registroUbicacionModal" tabindex="-1" aria-labelledby="registroUbicacionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background-color: #2d2d2d; color: #f0f0f0; border-radius: 12px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registroUbicacionModalLabel">Registro de Ubicación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+
+                    <!-- Nombre de la ubicación -->
+                    <div class="mb-3">
+                        <label for="id_nombre" class="form-label">Nombre de la Ubicación</label>
+                        {{ form.nombre }}
+                        {% for error in form.nombre.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Dirección -->
+                    <div class="mb-3">
+                        <label for="id_direccion" class="form-label">Dirección</label>
+                        {{ form.direccion }}
+                        {% for error in form.direccion.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Tipo de Ubicación y Capacidad -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="id_tipo" class="form-label">Tipo de Ubicación</label>
+                            {{ form.tipo }}
+                            {% for error in form.tipo.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_capacidad" class="form-label">Capacidad</label>
+                            <input type="number" id="id_capacidad" name="capacidad" class="form-control" min="1" inputmode="numeric" 
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                            {% for error in form.capacidad.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Coordenadas -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="id_latitud" class="form-label">Latitud</label>
+                            {{ form.latitud }}
+                            {% for error in form.latitud.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_longitud" class="form-label">Longitud</label>
+                            {{ form.longitud }}
+                            {% for error in form.longitud.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Fotos -->
+                    <div class="mb-3">
+                        <label for="id_fotos" class="form-label">Fotos de la Ubicación</label>
+                        <input type="file" id="id_fotos" name="fotos" class="form-control" multiple accept="image/*" onchange="previewImages(event)">
+                        <div id="imagesPreview" class="d-flex mt-2 flex-wrap gap-2"></div>
+                        {% for error in form.fotos.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Previsualización de imágenes seleccionadas
+    function previewImages(event) {
+        const previewContainer = document.getElementById('imagesPreview');
+        previewContainer.innerHTML = ''; // Limpiar previas imágenes
+
+        Array.from(event.target.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '100px';
+                img.style.height = 'auto';
+                img.style.border = '1px solid #ccc';
+                img.style.borderRadius = '8px';
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+</script>

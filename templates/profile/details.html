@@ -1,0 +1,73 @@
+{% include "components/head.html" %}
+<body>
+    {% include "components/navbar.html" %}
+    <div class="container mt-5">
+
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="artist-pic.jpg" class="card-img-top rounded-circle mx-auto mt-3" alt="Artist Picture" style="width: 150px; height: 150px;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">John Doe Band</h5>
+                        <p class="card-text">Music Genre: Rock</p>
+                        <p class="text-muted">Bringing you the best of rock 'n' roll since 2005!</p>
+                        <div class="social-links">
+                            <a href="https://twitter.com/johndoeband" class="btn btn-outline-primary btn-sm">Twitter</a>
+                            <a href="https://instagram.com/johndoeband" class="btn btn-outline-danger btn-sm">Instagram</a>
+                            <a href="https://spotify.com/johndoeband" class="btn btn-outline-success btn-sm">Spotify</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Events Section -->
+            <div class="col-md-8">
+                <h3>Upcoming Events</h3>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <h5 class="mb-1">Rock Fest 2024</h5>
+                        <p class="mb-1">Join us for an unforgettable night of rock music with top bands!</p>
+                        <small>December 10, 2024 - Los Angeles, CA</small>
+                    </div>
+                    <div class="list-group-item">
+                        <h5 class="mb-1">Summer Jam 2024</h5>
+                        <p class="mb-1">Our summer tour continues with amazing performances!</p>
+                        <small>July 14, 2024 - New York, NY</small>
+                    </div>
+                    <div class="list-group-item">
+                        <h5 class="mb-1">Spring Concert 2024</h5>
+                        <p class="mb-1">Get ready for a night filled with new hits and fan favorites!</p>
+                        <small>April 25, 2024 - Chicago, IL</small>
+                    </div>
+                    <!-- More events can be added here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Music & Video Section -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>Featured Tracks & Videos</h3>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Hit Single - "Rock Forever"</h5>
+                        <p class="card-text">Listen to our latest hit on Spotify!</p>
+                        <a href="https://spotify.com/rockforever" class="btn btn-outline-success">Listen Now</a>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Official Music Video - "Endless Nights"</h5>
+                        <p class="card-text">Watch the official music video for our new single.</p>
+                        <a href="https://youtube.com/rockforever" class="btn btn-outline-danger">Watch on YouTube</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% include "components/head.html" %}
+        </head>
+    <body>
+        <header>
+            {% include "components/navbar.html" %}
+        </header>
+
+        <main class="container ">
+            <div class="container p-5" style="background-color: #242424; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); border-radius: 8px;">
+                <h1 class="mb-4 text-center text-light">Crear Artista</h1>
+                <form method="post" enctype="multipart/form-data" novalidate >
+                    {% csrf_token %}
+                    
+                    <!-- Nombre Artístico -->
+                    <div class="mb-3">
+                        <label for="id_nombre" class="form-label text-light">Nombre Artístico</label>
+                        {{ form.nombre }}
+                        {% for error in form.nombre.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label text-light">Correo Electrónico</label>
+                        {{ form.email }}
+                        {% for error in form.email.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Foto Field with Preview -->
+                    <div class="mb-3">
+                        <label for="id_foto" class="form-label text-light">Foto</label>
+                        <input type="file" id="id_foto" class="form-control" name="foto" accept="image/*" onchange="previewImage(event)">
+                        <div class="mt-2">
+                            <img id="imagePreview" src="#" alt="Image Preview" class="img-fluid" style="display:none; max-width: 100px;">
+                        </div>
+                        {% for error in form.foto.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Descripción Field -->
+                    <div class="mb-3">
+                        <label for="id_descripcion" class="form-label text-light">Descripción</label>
+                        {{ form.descripcion }}
+                        {% for error in form.descripcion.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-outline-secondary">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+
+
+        <script>
+            function previewImage(event) {
+                var reader = new FileReader();
+                reader.onload = function() {
+                    var output = document.getElementById('imagePreview');
+                    output.src = reader.result;
+                    output.style.display = 'block'; // Display the image after it's loaded
+                }
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        </script>
+    </body>
+</html>
