@@ -117,10 +117,11 @@
                               <div class="mt-auto d-flex justify-content-start align-items-center gap-2"> 
                                 <a href="{% url 'events:event_detail' event.id %}" class="btn btn-sm btn-outline-secondary">Ver detalles</a>
                                 <a class="btn btn-sm btn-primary btn-asistir">Asistir</a>
-                                <a href="{% url 'events:edit_event' event.id %}" class="btn btn-sm btn-primary">Editar</a>
                                 
-                                <!-- {% if user.is_superuser %} -->
-                                <!-- {% endif %} -->
+                                
+                                {% if user.is_superuser %}
+                                <a href="{% url 'events:edit_event' event.id %}" class="btn btn-sm btn-primary">Editar</a>
+                                {% endif %}
                               </div>
                           </div>
                       </div>
