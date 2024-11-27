@@ -6,7 +6,7 @@ def genero_list(request):
 
 def home_view(request):
 
-    return render(request, 'test.html')
+    return render(request, 'landing_page.html')
 
 def events_view(request):
     return render(request, 'events.html')
